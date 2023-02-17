@@ -1,0 +1,25 @@
+.radio-options input {
+    display: none;
+}
+
+.radio-options input[type="radio"]:checked+label {
+    font-weight: bold;
+    border-color: rgb(0, 0, 0);
+}
+
+.radio-options {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    grid-gap: 1px;
+}
+
+.radio-options label {
+    font-size: 16px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+    padding: 10px 0px;
+    border-radius: 4px;
+}
