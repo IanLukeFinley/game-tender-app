@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
-// import SetupScreen from './SetupScreen';
+import SetupScreen from './components/SetupScreen';
 // import RatingScreen from './RatingScreen';
 // import Logo from './Logo';
 // import XMLParser from 'react-xml-parser';
@@ -32,16 +32,17 @@ function App() {
   //Handle functions
 
   const handleChange = ({ target }) => {
-    const value = target.value;
-    setFormData({
-      ...formData,
-      [target.name]: value.trim(),
-    });
+    // const value = target.value;
+    // setFormData({
+    //   ...formData,
+    //   [target.name]: value.trim(),
+    // });
   };
 
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
+  const handleSubmit = (event) => {
 
+  }
+  //event.preventDefault();
   //   //remove any previous errors
   //   setFormData({ ...formData, error: '' });
 
@@ -112,11 +113,8 @@ function App() {
     )
   } else {
     return (
-      <Text>Setup Screen will go here</Text>
-      // <AppContainer>
       //   <Logo name="GameTender" />
-      //   <SetupScreen formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} waitingForData={waitingForData} />
-      // </AppContainer>
+      <SetupScreen formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} waitingForData={waitingForData} />
     )
   }
 }
