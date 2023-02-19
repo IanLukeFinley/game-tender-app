@@ -1,15 +1,15 @@
-// import styled from "styled-components";
+import { StyleSheet, Text } from 'react-native';
 
-// const LogoText = styled.div`
-// text-align: center;
-// padding: 14px 0;
-// font-size: 34px;
-// font-weight: 600;
-// letter-spacing: -2px;
-// background: linear-gradient(360deg,#050191 0%,#ca78ff 100%);  ;
-// -webkit-background-clip: text;
-// -webkit-text-fill-color: transparent;`
+const styles = StyleSheet.create({
+    logoText: {
+        textAlign: 'center',
+        fontSize: 34,
+        fontWeight: '600',
+        letterSpacing: -2,
+        color: '#b82de2',
+    },
+});
 
-// export default function Logo(props) {
-//     return <LogoText>{props.name}</LogoText>
-// }
+export default function Logo(props) {
+    return <Text style={styles.logoText}>{props.name}</Text>
+}

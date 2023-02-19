@@ -2,6 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import SetupScreen from './components/SetupScreen';
+import StatusBarSpacer from './components/StatusBarSpacer';
 // import RatingScreen from './RatingScreen';
 // import Logo from './Logo';
 // import XMLParser from 'react-xml-parser';
@@ -113,8 +114,10 @@ function App() {
     )
   } else {
     return (
-      //   <Logo name="GameTender" />
-      <SetupScreen formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} waitingForData={waitingForData} />
+      <View>
+        <StatusBarSpacer />
+        <SetupScreen formData={formData} handleChange={handleChange} handleSubmit={handleSubmit} waitingForData={waitingForData} />
+      </View>
     )
   }
 }

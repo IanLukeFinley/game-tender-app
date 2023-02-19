@@ -1,34 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import Logo from './Logo';
+import { Picker } from '@react-native-picker/picker';
 // import styled from 'styled-components';
 // import './radio-options.css';
 // import LoadingDots from './LoadingDots';
 
 export default function SetupScreen({ formData, handleChange, handleSubmit, waitingForData }) {
-  return (
-    <View style={styles.setupForm}>
-        <View >
-            <Text style={styles.helperText} onSubmit={handleSubmit}>
-                Can't pick a game? No worries - we couldn't either. Enter your BoardGameGeek username and answer some questions about what you're looking for. Then, swipe to vote on what games sound fun. Once everyone has voted, you can see which games your party is most excited about!
-            </Text>
-        </View>
-        <View style={styles.setupCard}>
-            <View style={styles.filter}>
-                <Text style={styles.label}>BGG Username</Text>
-                <TextInput
-                style={styles.input}
-                id="playername"
-                name="playername"
-                placeholder='Enter your BGG User Name'
-                onChangeText={handleChange}
-                //onBlur={handleBlur('title')}
-                value={formData.playername} 
-                />
+    const [selectedPlayerCount, setSelectedPlayerCount] = useState();
+    const [selectedPlaytime, setSelectedPlaytime] = useState();
+
+    return (
+        <View style={styles.setupForm}>
+            <Logo name="GameTender" />
+            <View >
+                <Text style={styles.helperText} onSubmit={handleSubmit}>
+                    Can't pick a game? No worries - we couldn't either. Enter your BoardGameGeek username and answer some questions about what you're looking for. Then, swipe to vote on what games sound fun. Once everyone has voted, you can see which games your party is most excited about!
+                </Text>
             </View>
-            <View style={styles.filter}>
-                <Text style={styles.label}>Players</Text>
-                {/* <DropDown  May need a library for this
+            <View style={styles.setupCard}>
+                <View style={styles.filter}>
+                    <Text style={styles.label}>BGG Username</Text>
+                    <TextInput
+                        style={styles.input}
+                        id="playername"
+                        name="playername"
+                        placeholder='Enter your BGG User Name'
+                        onChangeText={handleChange}
+                        //onBlur={handleBlur('title')}
+                        value={formData.playername}
+                    />
+                </View>
+                <View style={styles.filter}>
+                    <Text style={styles.label}>Players</Text>
+                    {/* <DropDown  May need a library for this
                     id="playercount"
                     name="playercount"
                     onChange={handleChange}
@@ -42,10 +48,24 @@ export default function SetupScreen({ formData, handleChange, handleSubmit, wait
                     <option>7</option>
                     <option>8+</option>
                 </DropDown> */}
-            </View>
-            <View style={styles.filter}>
-                <Text style={styles.label}>Game Length</Text>
-                {/* <DropDown Ditto
+                    <Picker
+                        selectedValue={selectedPlayerCount}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setSelectedPlayerCount(itemValue)
+                        }>
+                        <Picker.Item label="1" value="1" />
+                        <Picker.Item label="2" value="2" />
+                        <Picker.Item label="3" value="3" />
+                        <Picker.Item label="4" value="4" />
+                        <Picker.Item label="5" value="5" />
+                        <Picker.Item label="6" value="6" />
+                        <Picker.Item label="7" value="7" />
+                        <Picker.Item label="8+" value="8" />
+                    </Picker>
+                </View>
+                <View style={styles.filter}>
+                    <Text style={styles.label}>Game Length</Text>
+                    {/* <DropDown Ditto
                     id="playtime"
                     name="playtime"
                     onChange={handleChange}
@@ -56,19 +76,30 @@ export default function SetupScreen({ formData, handleChange, handleSubmit, wait
                     <option value="120">About two hours</option>
                     <option value="240">Over two hours</option>
                 </DropDown> */}
-            </View>
-            <Text style={styles.error}>{formData.error}</Text>
-            <Button onClick={() => handleSubmit} title='START'/>
+                    <Picker
+                        selectedValue={selectedPlaytime}
+                        onValueChange={(itemValue, itemIndex) =>
+                            setSelectedPlaytime(itemValue)
+                        }>
+                        <Picker.Item label="Play time doesn't matter" value="99" />
+                        <Picker.Item label="About 30 minutes" value="30" />
+                        <Picker.Item label="About an hour" value="60" />
+                        <Picker.Item label="About two hours" value="120" />
+                        <Picker.Item label="Over two hours" value="240" />
+                    </Picker>
+                </View>
+                <Text style={styles.error}>{formData.error}</Text>
+                <Button onClick={() => handleSubmit} title='START' />
                 {/* {waitingForData ? <LoadingDots /> : 'START'} */}
+            </View>
         </View>
-    </View>
-  );
+    );
 };
 
 
 const styles = StyleSheet.create({
     setupForm: {
-        padding:20,
+        padding: 20,
         flex: 1
     },
     helperText: {
@@ -79,7 +110,7 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         elevation: 3,
         backgroundColor: '#fff',
-        shadowOffset: {width: 1, height: 1},
+        shadowOffset: { width: 1, height: 1 },
         shadowColor: '#333',
         shadowOpacity: 0.3,
         shadowRadius: 2,
