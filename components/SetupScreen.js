@@ -3,13 +3,84 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import Logo from './Logo';
 import { Picker } from '@react-native-picker/picker';
+import XMLParser from 'react-xml-parser';
+import SortFunction from '../utils/SortFunction';
+import reformatBGGData from '../utils/reformatBGGData';
 // import styled from 'styled-components';
 // import './radio-options.css';
 // import LoadingDots from './LoadingDots';
 
-export default function SetupScreen({ formData, handleChange, handleSubmit, waitingForData }) {
-    const [selectedPlayerCount, setSelectedPlayerCount] = useState();
-    const [selectedPlaytime, setSelectedPlaytime] = useState();
+export default function SetupScreen({ formData }) {
+    const [selectedPlayerName, setSelectedPlayerName] = useState();
+    const [selectedPlayerCount, setSelectedPlayerCount] = useState(2);
+    const [selectedPlaytime, setSelectedPlaytime] = useState(99);
+    const [waitingForData, setWaitingForData] = useState(false);
+    const [errorMessage, setErrorMessage] = useState();
+
+    const handleSubmit = () => {
+        console.log('Submitting form data');
+        console.log({ selectedPlayerName, selectedPlayerCount, selectedPlaytime });
+
+        //remove any previous errors
+        setErrorMessage();
+
+        if (!selectedPlayerName) {
+            setErrorMessage('Please enter your BoardGameGeek username.');
+            return;
+        }
+
+        if (waitingForData) {
+            return;
+        }
+        setWaitingForData(true);
+
+        //Watch for response code and keep trying fetch while the backend prepares data - see https://boardgamegeek.com/wiki/page/BGG_XML_API
+        var interval = setInterval(function () {
+            fetch(`https://boardgamegeek.com/xmlapi2/collection?username=${selectedPlayerName}&own=1&excludesubtype=boardgameexpansion`)
+                .then(response => {
+                    if (response.ok) {
+                        if (response.status === 202) {
+                            return Promise.resolve();
+                        }
+                        clearInterval(interval);
+                        return response.text();
+                    }
+                    throw new Error('Unable to contact BoardGameGeek');
+                })
+                .then(data => {
+                    if (data) {
+                        const collectionData = new XMLParser().parseFromString(data);
+                        //console.log(collectionData);
+                        const gameIds = collectionData?.children.map(game => game.attributes.objectid);
+                        //console.log(gameIds);
+                        fetch(`https://boardgamegeek.com/xmlapi2/thing?id=${gameIds.join(',')}`)
+                            .then(response => response.text())
+                            .then(data => {
+                                console.log('game data!');
+                                const bggData = new XMLParser().parseFromString(data);
+                                console.log(bggData)
+                                if (bggData.children.length === 0) {
+                                    setErrorMessage('No games found in collection');
+                                }
+                                const formattedGames = SortFunction(formData, reformatBGGData(bggData));
+                                if (!formattedGames.length) {
+                                    setErrorMessage('No games in collection match specified filters');
+                                    setWaitingForData(false);
+                                    return;
+                                }
+                                console.log(formattedGames)
+                                // setPresentList(formattedGames);
+                                setWaitingForData(false);
+                            });
+                    }
+                })
+                .catch(error => {
+                    setErrorMessage('BoardGameGeek user not found (or unable to contact BoardGameGeek)');
+                    setWaitingForData(false);
+                    clearInterval(interval);
+                })
+        }, 2000);
+    }
 
     return (
         <View style={styles.setupForm}>
@@ -27,27 +98,12 @@ export default function SetupScreen({ formData, handleChange, handleSubmit, wait
                         id="playername"
                         name="playername"
                         placeholder='Enter your BGG User Name'
-                        onChangeText={handleChange}
-                        //onBlur={handleBlur('title')}
-                        value={formData.playername}
+                        onChangeText={setSelectedPlayerName}
+                    //onBlur={handleBlur('title')}
                     />
                 </View>
                 <View style={styles.filter}>
                     <Text style={styles.label}>Players</Text>
-                    {/* <DropDown  May need a library for this
-                    id="playercount"
-                    name="playercount"
-                    onChange={handleChange}
-                    value={formData.playercount}>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8+</option>
-                </DropDown> */}
                     <Picker
                         selectedValue={selectedPlayerCount}
                         onValueChange={(itemValue, itemIndex) =>
@@ -65,17 +121,6 @@ export default function SetupScreen({ formData, handleChange, handleSubmit, wait
                 </View>
                 <View style={styles.filter}>
                     <Text style={styles.label}>Game Length</Text>
-                    {/* <DropDown Ditto
-                    id="playtime"
-                    name="playtime"
-                    onChange={handleChange}
-                    value={formData.playtime}>   
-                    <option value="99">Play time doesn't matter</option>
-                    <option value="30">About 30 mintutes</option>
-                    <option value="60">About an hour</option>
-                    <option value="120">About two hours</option>
-                    <option value="240">Over two hours</option>
-                </DropDown> */}
                     <Picker
                         selectedValue={selectedPlaytime}
                         onValueChange={(itemValue, itemIndex) =>
@@ -88,8 +133,8 @@ export default function SetupScreen({ formData, handleChange, handleSubmit, wait
                         <Picker.Item label="Over two hours" value="240" />
                     </Picker>
                 </View>
-                <Text style={styles.error}>{formData.error}</Text>
-                <Button onClick={() => handleSubmit} title='START' />
+                <Text style={styles.error}>{errorMessage}</Text>
+                <Button onPress={handleSubmit} title='START' />
                 {/* {waitingForData ? <LoadingDots /> : 'START'} */}
             </View>
         </View>
