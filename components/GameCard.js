@@ -1,6 +1,7 @@
 // import styled from 'styled-components';
-// import getTimeColorBasedOnPlaytime from '../utils/getTimeColorBasedOnPlaytime';
-// import { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import getTimeColorBasedOnPlaytime from '../utils/getTimeColorBasedOnPlaytime';
+import { useState } from 'react';
 
 // const Card = styled.div`
 //     border: 1px solid #ccc;
@@ -72,39 +73,45 @@
 //     left: 0;
 // `
 
-// export default function GameCard(props) {
-//     const [showDescription, setShowDescription] = useState(false);
+const Card = (props) => (
+    <View>{props.contents}</View>
+)
 
-//     if (props.tutorial) {
-//         return (
-//             <Card style={{ background: '#ffffffe8' }}>
-//                 <TutorialCard>
-//                     <TutorialSection style={{ borderRight: '1px solid #dfdfdf' }}><TutorialIcon>👈</TutorialIcon>Swipe Left to pass on a game.</TutorialSection>
-//                     <TutorialSection><TutorialIcon>👉</TutorialIcon>Swipe Right to vote for a game.</TutorialSection>
-//                     <TutorialSection style={{ gridColumn: 'span 2', borderTop: '1px solid #dfdfdf' }}>Tap the Button to move on to the next player.<TutorialIcon>👇</TutorialIcon></TutorialSection>
-//                 </TutorialCard>
-//             </Card>
-//         )
-//     }
+const TutorialCard = (
+    <Card contents={
+        <View>
+            <View style={{ borderRight: '1px solid #dfdfdf' }}><Text>👈</Text>Swipe Left to pass on a game.</View>
+            <View><Text>👉</Text>Swipe Right to vote for a game.</View>
+            <View style={{ gridColumn: 'span 2', borderTop: '1px solid #dfdfdf' }}>Tap the Button to move on to the next player.<Text>👇</Text></View>
+        </View>
+    } />
+)
 
-//     const gameData = props.game;
-//     const name = gameData.name;
-//     const playtime = gameData.playingtime;
+export default function GameCard(props) {
+    const [showDescription, setShowDescription] = useState(false);
 
-//     //this is crazy but I found (very) pseudo random numbers from the game data to ensure they stayed consistent on re-render
-//     //nothing else seemed to work (including useMemo())
-//     const id = gameData.id;
-//     const rotation = gameData.name.length % 2 == 0 ? id % 1000 / 1000 : -1 * id % 1000 / 1000;
-//     const xTranslation = gameData.thumbnail.length % 2 == 0 ? id % 100 / 100 : -1 * id % 100 / 100;
-//     const yTranslation = gameData.name.length & 2 == 0 ? id % 10 / 10 : -1 * id % 10 / 10;
+    if (props.tutorial) {
+        return TutorialCard
+    }
 
-//     return (
-//         <Card style={{ transform: `rotate(${rotation * 6 - 3}deg) translate(${xTranslation * 6 - 3}px, ${yTranslation * 6 - 3}px)` }} frontCard={props.frontCard}>
-//             <GameImage style={{ backgroundImage: 'url("' + gameData.image + '")' }}></GameImage>
-//             {showDescription && <GameDescription>{gameData.description}</GameDescription>}
-//             <GameName>{name}</GameName>
-//             <p>Votes: {`${gameData.votes}`}</p>
-//             <PlayTime style={{ color: getTimeColorBasedOnPlaytime(playtime, props.requestedPlayTime) }}>⏱ {playtime} min</PlayTime>
-//         </Card>
-//     )
-// }
+    const gameData = props.game;
+    const name = gameData.name;
+    const playtime = gameData.playingtime;
+
+    //this is crazy but I found (very) pseudo random numbers from the game data to ensure they stayed consistent on re-render
+    //nothing else seemed to work (including useMemo())
+    const id = gameData.id;
+    const rotation = gameData.name.length % 2 == 0 ? id % 1000 / 1000 : -1 * id % 1000 / 1000;
+    const xTranslation = gameData.thumbnail.length % 2 == 0 ? id % 100 / 100 : -1 * id % 100 / 100;
+    const yTranslation = gameData.name.length & 2 == 0 ? id % 10 / 10 : -1 * id % 10 / 10;
+
+    return (
+        <Card style={{ transform: `rotate(${rotation * 6 - 3}deg) translate(${xTranslation * 6 - 3}px, ${yTranslation * 6 - 3}px)` }} frontCard={props.frontCard}>
+            <GameImage style={{ backgroundImage: 'url("' + gameData.image + '")' }}></GameImage>
+            {showDescription && <GameDescription>{gameData.description}</GameDescription>}
+            <GameName>{name}</GameName>
+            <p>Votes: {`${gameData.votes}`}</p>
+            <PlayTime style={{ color: getTimeColorBasedOnPlaytime(playtime, props.requestedPlayTime) }}>⏱ {playtime} min</PlayTime>
+        </Card>
+    )
+}

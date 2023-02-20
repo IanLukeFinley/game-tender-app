@@ -1,8 +1,8 @@
-// import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 // import styled from 'styled-components';
-// import TinderCard from 'react-tinder-card';
-// import GameCard from './GameCard';
-// import VoteSorter from "../utils/VoteSorter";
+import TinderCard from 'react-tinder-card';
+import GameCard from './GameCard';
+import VoteSorter from "../utils/VoteSorter";
 // import ResultsScreen from './ResultsScreen';
 
 // const Screen = styled.div`
@@ -90,108 +90,108 @@
 //     gap: 30px;
 // `
 
-// export default function RatingScreen(props) {
+export default function RatingScreen(props) {
 
-//     const [ratingState, setRatingState] = useState({
-//         showTutorial: true,
-//         currentPosition: 0,
-//         playersCompleted: 0,
-//         ratingComplete: false,
-//         gamesList: props.gamesList
-//     });
+    const [ratingState, setRatingState] = useState({
+        showTutorial: true,
+        currentPosition: 0,
+        playersCompleted: 0,
+        ratingComplete: false,
+        gamesList: props.gamesList
+    });
 
-//     const onSwipe = (direction) => {
-//         console.log('You swiped: ' + direction)
-//         if (direction === 'right') {
-//             const newGamesList = ratingState.gamesList.map((game, i) => {
-//                 if (ratingState.currentPosition == i) {
-//                     return { ...game, votes: game.votes ? game.votes + 1 : 1 } //NOTE: all should start with votes of 0 now ... if there's no votes property, sets it to 1, otherwise increment by 1
-//                 }
-//                 else {
-//                     return game;
-//                 }
-//             })
-//             setRatingState({ ...ratingState, showTutorial: false, gamesList: newGamesList, ratingState, currentPosition: ratingState.currentPosition + 1 })
-//         }
-//         else if (direction === 'left') {
-//             setRatingState({ ...ratingState, showTutorial: false, currentPosition: ratingState.currentPosition + 1 })
-//         }
-//     }
+    const onSwipe = (direction) => {
+        console.log('You swiped: ' + direction)
+        if (direction === 'right') {
+            const newGamesList = ratingState.gamesList.map((game, i) => {
+                if (ratingState.currentPosition == i) {
+                    return { ...game, votes: game.votes ? game.votes + 1 : 1 } //NOTE: all should start with votes of 0 now ... if there's no votes property, sets it to 1, otherwise increment by 1
+                }
+                else {
+                    return game;
+                }
+            })
+            setRatingState({ ...ratingState, showTutorial: false, gamesList: newGamesList, ratingState, currentPosition: ratingState.currentPosition + 1 })
+        }
+        else if (direction === 'left') {
+            setRatingState({ ...ratingState, showTutorial: false, currentPosition: ratingState.currentPosition + 1 })
+        }
+    }
 
-//     const onCardLeftScreen = (myIdentifier) => {
-//         console.log(myIdentifier + ' left the screen')
-//     }
+    const onCardLeftScreen = (myIdentifier) => {
+        console.log(myIdentifier + ' left the screen')
+    }
 
-//     var cards = ratingState.gamesList.map((game, key) => {
-//         //only showing a few cards at a time for performance reasons.
-//         if (key == ratingState.currentPosition) {
-//             return (
-//                 <TinderCard onSwipe={onSwipe} onCardLeftScreen={() => onCardLeftScreen('fooBar')} preventSwipe={['up', 'down']} key={key}>
-//                     <GameCard game={game} frontCard={true} requestedPlayTime={props.formData.playtime} />
-//                 </TinderCard>
-//             )
-//         }
-//         else if (key > ratingState.currentPosition && key <= ratingState.currentPosition + 3) {
-//             return <GameCard game={game} key={key} requestedPlayTime={props.formData.playtime} />;
-//         }
-//         else {
-//             return;
-//         }
-//     })
+    var cards = ratingState.gamesList.map((game, key) => {
+        //only showing a few cards at a time for performance reasons.
+        if (key == ratingState.currentPosition) {
+            return (
+                <TinderCard onSwipe={onSwipe} onCardLeftScreen={() => onCardLeftScreen('fooBar')} preventSwipe={['up', 'down']} key={key}>
+                    <GameCard game={game} frontCard={true} requestedPlayTime={props.formData.playtime} />
+                </TinderCard>
+            )
+        }
+        else if (key > ratingState.currentPosition && key <= ratingState.currentPosition + 3) {
+            return <GameCard game={game} key={key} requestedPlayTime={props.formData.playtime} />;
+        }
+        else {
+            return;
+        }
+    })
 
-//     if (ratingState.showTutorial) {
-//         cards.unshift(
-//             <TinderCard onSwipe={() => setRatingState({ ...ratingState, showTutorial: false })} onCardLeftScreen={() => onCardLeftScreen('fooBar')} preventSwipe={['right', 'left']} key="-1">
-//                 <GameCard tutorial={true} />
-//             </TinderCard>
-//         )
-//     }
+    if (ratingState.showTutorial) {
+        cards.unshift(
+            <TinderCard onSwipe={() => setRatingState({ ...ratingState, showTutorial: false })} onCardLeftScreen={() => onCardLeftScreen('fooBar')} preventSwipe={['right', 'left']} key="-1">
+                <GameCard tutorial={true} />
+            </TinderCard>
+        )
+    }
 
-//     const handleClick = () => {
-//         if (ratingState.playersCompleted + 1 == props.formData.playercount) {
-//             setRatingState({ ...ratingState, ratingComplete: true })
-//         }
-//         else {
-//             setRatingState({ ...ratingState, currentPosition: 0, playersCompleted: ratingState.playersCompleted + 1 });
-//             console.log(ratingState);
-//         }
-//     }
+    const handleClick = () => {
+        if (ratingState.playersCompleted + 1 == props.formData.playercount) {
+            setRatingState({ ...ratingState, ratingComplete: true })
+        }
+        else {
+            setRatingState({ ...ratingState, currentPosition: 0, playersCompleted: ratingState.playersCompleted + 1 });
+            console.log(ratingState);
+        }
+    }
 
-//     if (ratingState.ratingComplete) {
-//         return (
-//             <ResultsScreen finalDisplay={VoteSorter(ratingState.gamesList)} />
-//         )
-//     } else {
-//         return (
-//             <Screen>
-//                 {ratingState.currentPosition < ratingState.gamesList.length ? (
-//                     <>
-//                         <CardContainer>
-//                             {cards.reverse()}
-//                         </CardContainer>
-//                         <VoteButtonsContainer>
-//                         <VoteButton onClick={() => onSwipe('left')} style={{paddingTop: '5px'}}>👎</VoteButton>
-//                         <VoteButton onClick={() => onSwipe('right')} style={{paddingBottom: '5px'}}>👍</VoteButton>
-//                         </VoteButtonsContainer>
-//                     </>
-//                 )
-//                     :
-//                     <CompleteContainer>Voting Complete!<CompleteIcon>✔</CompleteIcon></CompleteContainer>}
-//                 <BottomSection>
-//                     <Button onClick={handleClick}>
-//                         Next Player →
-//                     </Button>
-//                     {ratingState.currentPosition < ratingState.gamesList.length ? (
-//                         <Info>
-//                             Game {`${ratingState.currentPosition + 1}`} of {`${ratingState.gamesList.length}`}. Player {`${ratingState.playersCompleted + 1}`} of {`${props.formData.playercount}`}.
-//                         </Info>)
-//                         : (
-//                             <Info>
-//                                 Voting Complete! {ratingState.playersCompleted + 1 == props.formData.playercount ? 'Tap to view results.' : `Pass to Player ${ratingState.playersCompleted + 2}.`}
-//                             </Info>)
-//                     }
-//                 </BottomSection>
-//             </Screen>
-//         )
-//     }
-// }
+    if (ratingState.ratingComplete) {
+        return (
+            <ResultsScreen finalDisplay={VoteSorter(ratingState.gamesList)} />
+        )
+    } else {
+        return (
+            <Screen>
+                {ratingState.currentPosition < ratingState.gamesList.length ? (
+                    <>
+                        <CardContainer>
+                            {cards.reverse()}
+                        </CardContainer>
+                        <VoteButtonsContainer>
+                        <VoteButton onClick={() => onSwipe('left')} style={{paddingTop: '5px'}}>👎</VoteButton>
+                        <VoteButton onClick={() => onSwipe('right')} style={{paddingBottom: '5px'}}>👍</VoteButton>
+                        </VoteButtonsContainer>
+                    </>
+                )
+                    :
+                    <CompleteContainer>Voting Complete!<CompleteIcon>✔</CompleteIcon></CompleteContainer>}
+                <BottomSection>
+                    <Button onClick={handleClick}>
+                        Next Player →
+                    </Button>
+                    {ratingState.currentPosition < ratingState.gamesList.length ? (
+                        <Info>
+                            Game {`${ratingState.currentPosition + 1}`} of {`${ratingState.gamesList.length}`}. Player {`${ratingState.playersCompleted + 1}`} of {`${props.formData.playercount}`}.
+                        </Info>)
+                        : (
+                            <Info>
+                                Voting Complete! {ratingState.playersCompleted + 1 == props.formData.playercount ? 'Tap to view results.' : `Pass to Player ${ratingState.playersCompleted + 2}.`}
+                            </Info>)
+                    }
+                </BottomSection>
+            </Screen>
+        )
+    }
+}
