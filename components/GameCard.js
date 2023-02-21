@@ -4,20 +4,6 @@ import getTimeColorBasedOnPlaytime from '../utils/getTimeColorBasedOnPlaytime';
 import { useState } from 'react';
 
 // const Card = styled.div`
-//     border: 1px solid #ccc;
-//     border-radius: 20px;
-//     display: flex;
-//     flex-direction: column;
-//     padding: 40px;
-//     background: white;
-//     height: 60vh;
-//     background-size: cover;
-//     background-size: contain;
-//     background-repeat: no-repeat;
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     right: 0;
 //     --shadow-color: 0deg 0% 63%;
 //     box-shadow:     ${props => props.frontCard ?
 //         `0px 0.5px 0.6px hsl(var(--shadow-color) / 0.34),
@@ -73,16 +59,52 @@ import { useState } from 'react';
 //     left: 0;
 // `
 
+const styles = StyleSheet.create({
+    card: {
+        borderStyle: 'solid',
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 20,
+        padding: 40,
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'white',
+        height: '60vh',
+        backgroundSize: 'contain',
+        backgroundRepeat: 'no-repeat',
+        shadowColor: '0deg 0% 63%',
+        shadowOffset: {
+            width: 0,
+            height: 0.5,
+        },
+        shadowOpacity: 0.34,
+        shadowRadius: 0.6,
+        elevation: 5,
+        flexDirection: 'column',
+    },
+    tutorialCard: {
+        display: 'grid',
+        gridTemplateColumns: '50% 50%',
+        gridTemplateRows: '70% 30%',
+        height: '100%',
+        textAlign: 'center',
+        marginLeft: -20,
+        marginRight: -20,
+    },
+})
+
 const Card = (props) => (
-    <View>{props.contents}</View>
+    <View style={styles.card}>{props.contents}</View>
 )
 
 const TutorialCard = (
     <Card contents={
-        <View>
-            <View style={{ borderRight: '1px solid #dfdfdf' }}><Text>👈</Text>Swipe Left to pass on a game.</View>
-            <View><Text>👉</Text>Swipe Right to vote for a game.</View>
-            <View style={{ gridColumn: 'span 2', borderTop: '1px solid #dfdfdf' }}>Tap the Button to move on to the next player.<Text>👇</Text></View>
+        <View style={styles.tutorialCard}>
+            <View style={{ borderRight: '1px solid #dfdfdf' }}><Text>👈</Text><Text>Swipe Left to pass on a game.</Text></View>
+            <View><Text>👉</Text><Text>Swipe Right to vote for a game.</Text></View>
+            <View style={{ gridColumn: 'span 2', borderTop: '1px solid #dfdfdf' }}><Text>Tap the Button to move on to the next player.</Text><Text>👇</Text></View>
         </View>
     } />
 )
@@ -106,12 +128,22 @@ export default function GameCard(props) {
     const yTranslation = gameData.name.length & 2 == 0 ? id % 10 / 10 : -1 * id % 10 / 10;
 
     return (
-        <Card style={{ transform: `rotate(${rotation * 6 - 3}deg) translate(${xTranslation * 6 - 3}px, ${yTranslation * 6 - 3}px)` }} frontCard={props.frontCard}>
-            <GameImage style={{ backgroundImage: 'url("' + gameData.image + '")' }}></GameImage>
-            {showDescription && <GameDescription>{gameData.description}</GameDescription>}
-            <GameName>{name}</GameName>
-            <p>Votes: {`${gameData.votes}`}</p>
-            <PlayTime style={{ color: getTimeColorBasedOnPlaytime(playtime, props.requestedPlayTime) }}>⏱ {playtime} min</PlayTime>
-        </Card>
+        <Card style={{ transform: `rotate(${rotation * 6 - 3}deg) translate(${xTranslation * 6 - 3}px, ${yTranslation * 6 - 3}px)` }} frontCard={props.frontCard} contents={(
+            <><View style={{ backgroundImage: 'url("' + gameData.image + '")' }}></View>
+                {showDescription && <Text>{gameData.description}</Text>}
+                <Text>{name}</Text>
+                <Text>Votes: {`${gameData.votes}`}</Text>
+                <Text style={{ color: getTimeColorBasedOnPlaytime(playtime, props.requestedPlayTime) }}>⏱ {playtime} min</Text>
+            </>
+        )} />
     )
 }
+
+// old return statement
+// <Card style={{ transform: `rotate(${rotation * 6 - 3}deg) translate(${xTranslation * 6 - 3}px, ${yTranslation * 6 - 3}px)` }} frontCard={props.frontCard}>
+// <GameImage style={{ backgroundImage: 'url("' + gameData.image + '")' }}></GameImage>
+// {showDescription && <GameDescription>{gameData.description}</GameDescription>}
+// <GameName>{name}</GameName>
+// <p>Votes: {`${gameData.votes}`}</p>
+// <PlayTime style={{ color: getTimeColorBasedOnPlaytime(playtime, props.requestedPlayTime) }}>⏱ {playtime} min</PlayTime>
+// </Card>

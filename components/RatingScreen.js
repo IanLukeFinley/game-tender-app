@@ -1,27 +1,11 @@
 import React, { useState, useMemo } from 'react';
+import { StyleSheet, View, Text } from 'react-native';
 // import styled from 'styled-components';
 import TinderCard from 'react-tinder-card';
 import GameCard from './GameCard';
 import VoteSorter from "../utils/VoteSorter";
 // import ResultsScreen from './ResultsScreen';
 
-// const Screen = styled.div`
-//     display: grid;
-//     grid-template-rows: 1fr max-content;
-//     height: 100vh;
-//     max-width: 400px;
-// `
-
-// const CardContainer = styled.div`
-//     position: relative;
-//     margin: 13vh 5vw 0 5vw;
-// `
-
-// const BottomSection = styled.div`
-//     display: flex;
-//     flex-direction: column;
-//     align-items: center;
-// `
 
 // const Button = styled.button`
 //     background-color: #08AEEA;
@@ -89,6 +73,28 @@ import VoteSorter from "../utils/VoteSorter";
 //     align-items: center;
 //     gap: 30px;
 // `
+
+const styles = StyleSheet.create({
+    screen: {
+        display: 'grid',
+        gridTemplateRows: '1fr max-content',
+        height: '90vh',
+        width: '400px',
+        margin: 'auto'
+    },
+    cardContainer: {
+        marginTop: '5vh',
+        marginLeft: '5vw',
+        marginRight: '5vw',
+        marginBottom: 0
+    },
+    bottomSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+    },
+})
+
 
 export default function RatingScreen(props) {
 
@@ -163,35 +169,66 @@ export default function RatingScreen(props) {
         )
     } else {
         return (
-            <Screen>
+            <View style={styles.screen}>
                 {ratingState.currentPosition < ratingState.gamesList.length ? (
                     <>
-                        <CardContainer>
+                        <View style={styles.cardContainer}>
                             {cards.reverse()}
-                        </CardContainer>
-                        <VoteButtonsContainer>
-                        <VoteButton onClick={() => onSwipe('left')} style={{paddingTop: '5px'}}>👎</VoteButton>
-                        <VoteButton onClick={() => onSwipe('right')} style={{paddingBottom: '5px'}}>👍</VoteButton>
-                        </VoteButtonsContainer>
+                        </View>
+                        <View>
+                            <View onClick={() => onSwipe('left')} style={{ paddingTop: '5' }}><Text>👎</Text></View>
+                            <View onClick={() => onSwipe('right')} style={{ paddingBottom: '5' }}><Text>👍</Text></View>
+                        </View>
                     </>
                 )
                     :
-                    <CompleteContainer>Voting Complete!<CompleteIcon>✔</CompleteIcon></CompleteContainer>}
-                <BottomSection>
-                    <Button onClick={handleClick}>
-                        Next Player →
-                    </Button>
+                    <View><Text>Voting Complete!</Text><Text>✔</Text></View>}
+                <View style={styles.bottomSection}>
+                    <View onClick={handleClick}>
+                        <Text>Next Player →</Text>
+                    </View>
                     {ratingState.currentPosition < ratingState.gamesList.length ? (
-                        <Info>
-                            Game {`${ratingState.currentPosition + 1}`} of {`${ratingState.gamesList.length}`}. Player {`${ratingState.playersCompleted + 1}`} of {`${props.formData.playercount}`}.
-                        </Info>)
+                        <View>
+                            <Text>Game {`${ratingState.currentPosition + 1}`} of {`${ratingState.gamesList.length}`}. Player {`${ratingState.playersCompleted + 1}`} of {`${props.formData.playercount}`}.</Text>
+                        </View>)
                         : (
-                            <Info>
-                                Voting Complete! {ratingState.playersCompleted + 1 == props.formData.playercount ? 'Tap to view results.' : `Pass to Player ${ratingState.playersCompleted + 2}.`}
-                            </Info>)
+                            <View>
+                                <Text>Voting Complete! {ratingState.playersCompleted + 1 == props.formData.playercount ? 'Tap to view results.' : `Pass to Player ${ratingState.playersCompleted + 2}.`}</Text>
+                            </View>)
                     }
-                </BottomSection>
-            </Screen>
+                </View>
+            </View>
         )
     }
 }
+
+//old return statement:
+{/* <Screen>
+{ratingState.currentPosition < ratingState.gamesList.length ? (
+    <>
+        <CardContainer>
+            {cards.reverse()}
+        </CardContainer>
+        <VoteButtonsContainer>
+        <VoteButton onClick={() => onSwipe('left')} style={{paddingTop: '5px'}}>👎</VoteButton>
+        <VoteButton onClick={() => onSwipe('right')} style={{paddingBottom: '5px'}}>👍</VoteButton>
+        </VoteButtonsContainer>
+    </>
+)
+    :
+    <CompleteContainer>Voting Complete!<CompleteIcon>✔</CompleteIcon></CompleteContainer>}
+<BottomSection>
+    <Button onClick={handleClick}>
+        Next Player →
+    </Button>
+    {ratingState.currentPosition < ratingState.gamesList.length ? (
+        <Info>
+            Game {`${ratingState.currentPosition + 1}`} of {`${ratingState.gamesList.length}`}. Player {`${ratingState.playersCompleted + 1}`} of {`${props.formData.playercount}`}.
+        </Info>)
+        : (
+            <Info>
+                Voting Complete! {ratingState.playersCompleted + 1 == props.formData.playercount ? 'Tap to view results.' : `Pass to Player ${ratingState.playersCompleted + 2}.`}
+            </Info>)
+    }
+</BottomSection>
+</Screen> */}
