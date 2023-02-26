@@ -3,15 +3,12 @@ import { StyleSheet, Text, View } from 'react-native';
 import React, { useState } from 'react';
 import SetupScreen from './components/SetupScreen';
 import StatusBarSpacer from './components/StatusBarSpacer';
-// import RatingScreen from './RatingScreen';
+import RatingScreen from './components/RatingScreen';
 // import Logo from './Logo';
-// import SortFunction from '../utils/SortFunction';
-// import reformatBGGData from '../utils/reformatBGGData';
+//import SortFunction from './utils/SortFunction';
+//import reformatBGGData from './utils/reformatBGGData';
 
-// const AppContainer = styled.div`
-// display: grid;
-// grid-template-rows: auto 1fr;
-// `
+
 
 function App() {
 
@@ -43,8 +40,11 @@ function App() {
 
   if (presentList.length >= 1) {
     return (
-      <Text>Rating Screen will go here</Text>
-      //<RatingScreen gamesList={presentList} formData={formData} />
+      <View>
+        <Text>Rating Screen will go here</Text>
+        <RatingScreen gamesList={presentList} formData={formData} />
+      </View>
+
     )
   } else {
     return (
@@ -57,3 +57,9 @@ function App() {
 }
 
 export default App;
+
+//OLD CSS
+// const AppContainer = styled.div`
+// display: grid;
+// grid-template-rows: auto 1fr;
+// `

@@ -69,7 +69,7 @@ export default function SetupScreen({ formData }) {
                                     return;
                                 }
                                 console.log(formattedGames)
-                                // setPresentList(formattedGames);
+                                setPresentList(formattedGames);
                                 setWaitingForData(false);
                             });
                     }
@@ -83,7 +83,7 @@ export default function SetupScreen({ formData }) {
     }
 
     return (
-        <View style={styles.setupForm}>
+        <View style={styles.testContainer}>
             <Logo name="GameTender" />
             <View >
                 <Text style={styles.helperText} onSubmit={handleSubmit}>
@@ -144,8 +144,11 @@ export default function SetupScreen({ formData }) {
 
 const styles = StyleSheet.create({
     setupForm: {
-        padding: 20,
-        flex: 1
+        padding: 2,
+        flex: 1 //Isolated display issue to this property.  Why would Flex make it bonkers?
+    },
+    testContainer: {
+        padding: 20
     },
     helperText: {
         marginVertical: 8,
